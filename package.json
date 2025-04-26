@@ -1,0 +1,16 @@
+{
+  "name": "woodshillradio",
+  "version": "1.0.0",
+  "main": "songSearcher.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kaprekar",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10",
+    "youtube-search-api": "^1.2.2"
+  }
+}
