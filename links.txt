@@ -1,13 +1,1 @@
-5	https://www.youtube.com/watch?v=j37GED-AR3M
-5	https://www.youtube.com/watch?v=tH-GPdkkNik
-5	https://www.youtube.com/watch?v=EhC_c7p50so
-4	https://www.youtube.com/watch?v=k4V3Mo61fJM
-5	https://www.youtube.com/watch?v=D8UfEWttw1M
-1	https://www.youtube.com/watch?v=8g9NMCGjv3Q
-4	https://www.youtube.com/watch?v=04tC72kZM_o
-5	https://www.youtube.com/watch?v=1bDz2MZWKlM
-5	https://www.youtube.com/watch?v=Tyjxnb8hVp4
-4	https://www.youtube.com/watch?v=WAGbq3A9HfA
-5	https://www.youtube.com/watch?v=f-cyxWKzxVQ
-5	https://www.youtube.com/watch?v=jLedhA6rMBg
-5	https://www.youtube.com/watch?v=E0UN-pVTLf4
+5	https://www.youtube.com/watch?v=xVh6PVN-Kgo

@@ -3,6 +3,7 @@ const fs = require('fs');
 const api = require("youtube-search-api");
 const { application } = require('express');
 const { resourceLimits } = require('worker_threads');
+const { sign } = require('crypto');
 
 const playlistText = fs.readFileSync(path.resolve(__dirname, "playlist.txt")).toString('utf8');
 
@@ -18,25 +19,9 @@ class Song {
 }
 
 const specialCharacters = {
-  ":": "%3A",
-  "/": "%2F",
-  "?": "%3F",
   "#": "%23",
-  "[": "%5B",
-  "]": "%5D",
-  "@": "%40",
-  "!": "%21",
-  "$": "%24",
   "&": "%26",
-  "'": "%27",
-  "(": "%28",
-  ")": "%29",
-  "*": "%2A",
   "+": "%2B",
-  ",": "%2C",
-  ";": "%3B",
-  "=": "%3D",
-  "%": "%25",
 }
 
 const phases = ['album', "title", "artist"]
@@ -80,7 +65,12 @@ class Video {
 
 const search = async (searchTerm) => {
   console.log(`SEARCHING:   ${searchTerm}`);
-  const response = await api.GetListByKeyword(searchTerm);
+  let response;
+  try {
+    response = await api.GetListByKeyword(searchTerm);
+  } catch {
+    return false;
+  }
   if (!response.items) {
     console.log("FAILED REQUEST");
     return false;
@@ -95,26 +85,24 @@ const loopSearch = async() => {
     let certainty = 5;
     while (certainty > 0) {
       let searchTerm = '';
-      if (song.album) {
-        if (certainty === 5 || certainty === 3) searchTerm += `"${song.album}" `;
-        else searchTerm += `${song.album} `;
-      }
+      if (song.album && certainty === 5) searchTerm += `${song.album} `;
       if (certainty === 5 || certainty === 3) searchTerm += `"${song.title}" "${song.artist}"`;
       else searchTerm += `${song.title} ${song.artist}`;
       if (certainty > 3) searchTerm += ` "topic"`;
       let searchResult = await search(searchTerm, certainty, song.title);
       console.log(`RECEIVED:    ${searchResult ? searchResult.title : "-"}`);
       let resultTitle = '';
-      for (const char of searchResult.title) {
-        if (specialCharacters[char]) resultTitle += specialCharacters[char];
-        else resultTitle += char;
-      }
       if (searchResult) {
-        if (!resultTitle.includes(song.title)) {
+        for (const char of searchResult.title) {
+          if (specialCharacters[char]) resultTitle += specialCharacters[char];
+          else resultTitle += char;
+        }
+        if (!resultTitle.toLowerCase().includes(song.title.toLowerCase())) {
           certainty--;
           if (certainty > 1) continue;
         }
         if (resultTitle.includes("Video") && !song.title.includes("Video")) certainty--;
+        if (certainty === 5 && resultTitle.toLowerCase() !== song.title.toLowerCase()) certainty--;
         results.push(new Result(searchResult.id, certainty));
         continue songLoop;
       }
